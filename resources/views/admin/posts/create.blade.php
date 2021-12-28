@@ -1,0 +1,20 @@
+
+<h1>Cadastrar Novo Post</h1>
+<!-- para exibir os erros da validação  o metod any() retorna true-->
+
+@if ($errors->any())
+    <ul>
+      @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+       @endforeach
+    </ul>
+@endif
+
+<form class="" action="{{route('post.store')}}" method="post">
+  @csrf
+  <!-- o old é para manter o q foi escrito no campo onde não houve erro sem ele fica em branco.-->
+  <input type="text" name="title" id="title" placeholder="Titulo" value="{{old('title')}}">
+  <textarea name="content" id="content" rows="4" cols="30" placeholder="Conteúdo" >{{old('content')}}</textarea>
+  <button type="submit" >Enviar</button>
+
+</form>
