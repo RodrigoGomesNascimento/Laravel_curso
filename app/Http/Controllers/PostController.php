@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Requests\StoreUpdatePost;
 use  App\Models\Post;
+//use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -12,11 +14,14 @@ class PostController extends Controller
     public function index()
     {
         //comando para trazer a listagem.
-        $posts = Post::get();//poderia ser também Post::all(); para trazer os dados
+       // $posts = Post::get();//poderia ser também Post::all(); para trazer os dados
        //debug saber se trouxe os dados
         //dd($posts); //com a variavel.
         //imprimir o resultado na tela; tem q ser através de um loop
-
+        //para ordenar a paginação.
+        //$posts = Post::orderBy('id')->paginate(15);
+        //pode ser assim
+        $posts = Post::latest()->paginate(15);
         return view('admin.posts.index', compact('posts'));
 
     }
@@ -84,4 +89,18 @@ class PostController extends Controller
                     ->route('post.index')
                     ->with('message', 'Post editado com sucesso');
     }
+
+    public function search(Request $req)
+    {
+        //dd("pesquisando por {$req->search}");
+        /* para poder filtrar ou procurar ONDE NAME É O CAMPO Q VOU PESQUISAR PODE SER PO LIK OU = OU <>!=
+            Tem que criar uma variavel como forma para auxiliar na paginação */
+            $filters = $req->except('_token');
+
+        $posts = Post::where('title', 'LIKE', "%{$req->search}%")
+                                ->orWhere('content', 'LIKE', "%{$req->search}%")
+                                ->paginate();
+        return view('admin.posts.index', compact('posts', 'filters'));
+    }
+
 }

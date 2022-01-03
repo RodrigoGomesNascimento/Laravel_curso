@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/posts/create', [PostController::class, 'create'])->name('post.create');
+//tem que ser tanto post qto get pois se não da erro na paginação
+Route::any('/posts/search', [PostController::class, 'search'])->name('post.search');
 Route::get('/posts', [PostController::class, 'index'] )->name('post.index');
 //rota para inserir dados
 Route::post('/posts', [PostController::class, 'store'])->name('post.store');
